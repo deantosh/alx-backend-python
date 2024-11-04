@@ -42,3 +42,17 @@ class TestGithubOrgClient(unittest.TestCase):
         # verify thet requests.get was called once with expected url
         mock_get.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}")
+
+    def test_public_repos_url(self):
+        """Test that _public_repos_url returns the expected value."""
+        with patch('client.GithubOrgClient.org',
+                   new_property=property(lambda self: {
+                       "repos_url": "https://api.github.com/orgs/google/repos"
+                   })):
+
+            org_instance = GithubOrgClient("google")
+
+            # Call the _public_repos_url method
+            url = org_instance._public_repos_url()
+
+            self.assertEqual(url, "https://api.github.com/orgs/google/repos")
